@@ -20205,6 +20205,10 @@
 	  },
 	
 	  playerTimeInterval: function () {
+	    if (this.getPlayer().getPlayerState() !== 1) {
+	      return;
+	    }
+	
 	    var ytTime = this.getPlayer().getCurrentTime();
 	    if (ytTime === this.state.ytTime) {
 	      this.setState({ localTime: this.state.localTime + .01 });
@@ -20220,12 +20224,24 @@
 	    if (this.state.beats[nextBeat].time < this.state.localTime) {
 	      this.setState({ nextBeat: this.state.nextBeat + 1 });
 	    }
+	
+	    if (nextBeat === this.state.beats.length - 1) {
+	      clearInterval(this.intervalVar);
+	    }
 	  },
 	
 	  showBeat: function () {
 	    var nextBeat = this.state.nextBeat;
 	    if (this.state.beats) {
-	      return this.state.beats[nextBeat].time;
+	      return React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          null,
+	          this.state.beats[nextBeat].time
+	        )
+	      );
 	    } else {
 	      return null;
 	    }

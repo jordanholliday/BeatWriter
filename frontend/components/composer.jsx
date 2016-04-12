@@ -2,14 +2,16 @@ var React = require('react'),
     ApiUtil = require('../util/api_util');
 
 var Composer = React.createClass({
+  getInitialState: function () {
+    return {
+      localTime: 0,
+      ytTime: 0,
+      nextBeat: 0
+    }
+  },
+
   componentDidMount: function () {
-   // $('.react-root').tubular({
-   //      videoId: this.props.youtubeId,
-   //      mute: false
-   //    })
-
     $(document.body).on('keydown', this.keyDownHandler);
-
     this.enableIframeApi();
   },
 
@@ -26,12 +28,9 @@ var Composer = React.createClass({
     } else if (e.which === 188 || e.which === 190) {
       ApiUtil.addBeat({
         time: this.getPlayer().getCurrentTime(),
-        song_id: this.props.songId
+        song_id: "1"
       });
     }
-
-    console.log(e.which)
-    console.log(this.getPlayer().getCurrentTime());
   },
 
   enableIframeApi: function () {
@@ -44,21 +43,18 @@ var Composer = React.createClass({
     var youtubeId = this.props.youtubeId;
     onYouTubeIframeAPIReady = function () {
       player = new YT.Player('song-container', {
-        videoId: youtubeId,
+        videoId: "Zbhc6ypLnuw",
         height: window.innerHeight,
         width: window.innerWidth,
         modestBranding: 1,
         showinfo: 0,
         controls: 0,
         fs: 0,
-        disablekb: 0,
-        events: {
-          'onReady': this.onPlayerReady,
-          'onStateChange': console.log('state change')
-        }
+        disablekb: 0
       });
     }
 
+    // make player in scope throughout composer
     this.getPlayer = function () {
       return player;
     }

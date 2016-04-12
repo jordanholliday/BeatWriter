@@ -5,3 +5,19 @@
   left: 0;
   right: 0;
 }
+
+.game-layer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #fff;
+  text-align: center;
+}
+
+.game-layer .current-letter {
+  margin-top: 30%;
+  font-size: 3em;
+  font-weight: 600;
+}

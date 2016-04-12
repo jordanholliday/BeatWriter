@@ -12,6 +12,20 @@ var ApiUtil = {
         console.log("ApiUtil#addBeat error");
       }
     });
+  },
+
+  getSongBeats: function (songId, callback) {
+    $.ajax({
+      type: 'GET',
+      url: 'api/songs/' + songId,
+      dataType: 'json',
+      success: function (songBeats) {
+        callback(songBeats);
+      },
+      error: function () {
+        console.log("ApiUtil#getSongBeats error");
+      }
+    });
   }
 };
 

@@ -1,9 +1,23 @@
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    Song = require('./components/song');
+    Composer = require('./components/composer'),
+    Song = require('./components/song'),
+    ReactRouter = require('react-router'),
+    Router = ReactRouter.Router,
+    Route = ReactRouter.Route,
+    IndexRoute = ReactRouter.IndexRoute,
+    hashHistory = ReactRouter.hashHistory;
+
+var router = (
+  <Router history={hashHistory}>
+    <Route path="/song" component={Song} />
+    <Route path="/composer" component={Composer} />
+  </Router>
+);
+
 
 $(document).on('ready', function () {
   ReactDOM.render(
-    <Song youtubeId="Zbhc6ypLnuw" songId="1" />, $('.react-root')[0]
+    router, $('.react-root')[0]
   );
 });

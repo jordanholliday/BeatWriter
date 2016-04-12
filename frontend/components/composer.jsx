@@ -21,15 +21,29 @@ var Composer = React.createClass({
 
   keyDownHandler: function (e) {
     e.stopPropagation();
+    e.preventDefault();
     if (e.which === 32) {
-      if (this.getPlayer().getPlayerState() !== 1) {
-        this.getPlayer().playVideo();
-      }
+     if (this.getPlayer().getPlayerState() !== 1) {
+       this.getPlayer().playVideo();
+       this.intervalVar = setInterval(this.playerTimeInterval, 10);
+     } else {
+       this.getPlayer().pauseVideo();
+       clearInterval(this.intervalVar);
+     }
     } else if (e.which === 188 || e.which === 190) {
       ApiUtil.addBeat({
-        time: this.getPlayer().getCurrentTime(),
+        time: this.state.localTime,
         song_id: "1"
       });
+    }
+  },
+
+  playerTimeInterval: function () {
+    var ytTime = this.getPlayer().getCurrentTime();
+    if (ytTime === this.state.ytTime) {
+      this.setState({ localTime: this.state.localTime + .010 });
+    } else {
+      this.setState({ localTime: ytTime, ytTime: ytTime });
     }
   },
 

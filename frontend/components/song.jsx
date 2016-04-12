@@ -39,7 +39,7 @@ var Song = React.createClass({
   togglePlay: function () {
     if (this.getPlayer().getPlayerState() !== 1) {
       this.getPlayer().playVideo();
-      this.intervalVar = setInterval(this.playerTimeInterval, 15);
+      this.intervalVar = setInterval(this.playerTimeInterval, 10);
     } else {
       this.getPlayer().pauseVideo();
       clearInterval(this.intervalVar);
@@ -49,7 +49,7 @@ var Song = React.createClass({
   playerTimeInterval: function () {
     var ytTime = this.getPlayer().getCurrentTime();
     if (ytTime === this.state.ytTime) {
-      this.setState({ localTime: this.state.localTime + .015 });
+      this.setState({ localTime: this.state.localTime + .01 });
     } else {
       this.setState({ localTime: ytTime, ytTime: ytTime });
     }

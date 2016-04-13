@@ -12,12 +12,68 @@
   bottom: 0;
   left: 0;
   right: 0;
-  color: #fff;
+  color: #777;
   text-align: center;
+  background: rgba(0, 0, 0, .6);
 }
 
-.game-layer .current-letter {
-  margin-top: 30%;
-  font-size: 3em;
+.game-layer .beat-letters {
+  margin-top: 20%;
+  display: inline-block;
   font-weight: 600;
+  white-space: nowrap;
+}
+
+.beat-letters li {
+  display: inline-block;
+  margin-right: 20px;
+  padding-bottom: 5px;
+  font-size: 88px;
+  line-height: 112px;
+  text-align: center;
+  width: 70px;
+  height: 120px;
+}
+
+.beat-letters li:last-child {
+  margin-right: 0;
+}
+
+.beat-letters li.selected {
+  position: relative;
+  color: #fff;
+}
+
+.beat-letters li.selected:before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  border: 35px solid #fff;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top: none;
+}
+
+.beat-letters li.selected:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border: 35px solid #fff;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom: none;
+}
+
+.scoreboard {
+  margin: 10% auto 0;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.scoreboard h2 {
+  font-size: 40px;
 }

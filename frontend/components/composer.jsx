@@ -57,7 +57,7 @@ var Composer = React.createClass({
     var youtubeId = this.props.youtubeId;
     onYouTubeIframeAPIReady = function () {
       player = new YT.Player('song-container', {
-        videoId: "Zbhc6ypLnuw",
+        videoId: "KEI4qSrkPAs",
         height: window.innerHeight,
         width: window.innerWidth,
         modestBranding: 1,

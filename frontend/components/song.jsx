@@ -1,12 +1,15 @@
 var React = require('react'),
-    ApiUtil = require('../util/api_util');
+    ApiUtil = require('../util/api_util'),
+    LetterUtil = require('../util/letter_util'),
+    Beat = require('./beat');
 
 var Song = React.createClass({
   getInitialState: function () {
     return {
       localTime: 0,
       ytTime: 0,
-      nextBeat: 0
+      nextBeat: 0,
+      score: 0
     }
   },
 
@@ -25,10 +28,16 @@ var Song = React.createClass({
     e.preventDefault();
     if (e.which === 32) {
       this.togglePlay();
+    } else if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
+      this.setState({score: this.state.score + 10});
+    } else if (this.state.beats) {
+      null;
     }
   },
 
   storeSongBeats: function (song) {
+    LetterUtil.assignLetters(song.beats);
+
     this.setState({
       beats: song.beats,
       name: song.name,
@@ -61,25 +70,14 @@ var Song = React.createClass({
 
   incrementBeat: function () {
     var nextBeat = this.state.nextBeat;
-    if (this.state.beats[nextBeat].time < this.state.localTime) {
-      this.setState({nextBeat: this.state.nextBeat + 1});
+    if (this.state.beats[nextBeat + 1].time < this.state.localTime) {
+      this.setState({
+        nextBeat: this.state.nextBeat + 1
+      });
     }
 
     if (nextBeat === this.state.beats.length - 1) {
       clearInterval(this.intervalVar);
-    }
-  },
-
-  showBeat: function () {
-    var nextBeat = this.state.nextBeat;
-    if (this.state.beats) {
-      return (
-        <ul>
-          <li>{this.state.beats[nextBeat].time}</li>
-        </ul>
-      )
-    } else {
-      return null;
     }
   },
 
@@ -93,7 +91,7 @@ var Song = React.createClass({
     var youtubeId = this.props.youtubeId;
     onYouTubeIframeAPIReady = function () {
       player = new YT.Player('song-container', {
-        videoId: "Zbhc6ypLnuw",
+        videoId: "KEI4qSrkPAs",
         height: window.innerHeight,
         width: window.innerWidth,
         modestBranding: 1,
@@ -101,11 +99,7 @@ var Song = React.createClass({
         controls: 0,
         fs: 0,
         disablekb: 0,
-        wmode: "transparent",
-        events: {
-          'onReady': this.onPlayerReady,
-          'onStateChange': console.log('state change')
-        }
+        wmode: "transparent"
       });
     }
 
@@ -115,13 +109,45 @@ var Song = React.createClass({
     }
   },
 
+  renderOneBeat: function (i) {
+    if (this.state.beats[i]) {
+     return (<Beat
+        letter={this.state.beats ? this.state.beats[i].letter : null}
+        selected={this.state.nextBeat === i}
+        key={this.state.nextBeat + i}
+      />);
+    } else {
+      return (<Beat
+        letter={null}
+        selected={this.state.nextBeat === i}
+        key={this.state.nextBeat + i}
+      />);
+    }
+  },
+
+  renderBeats: function () {
+    if (!this.state.beats) {return null;}
+    var nextBeat = this.state.nextBeat;
+    var beatArr = [];
+
+    for (var i = nextBeat - 4; i < this.state.beats.length + 3 && i < nextBeat + 5; i++) {
+      beatArr.push(this.renderOneBeat(i));
+    }
+
+    return beatArr;
+  },
+
   render: function () {
     return (
       <div>
         <div className="game-layer" id="game-layer">
-          <div className="current-letter">
-            {this.showBeat()}
-          </div>
+          <ul className="beat-letters">
+            {this.renderBeats()}
+          </ul>
+          <section className="scoreboard">
+            <h1>Score</h1>
+            <h2>{this.state.score}</h2>
+          </section>
         </div>
         <container className="song-container" id="song-container">
         </container>

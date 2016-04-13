@@ -23,6 +23,23 @@ var LetterUtil = {
     }
 
     return _rightHandLetters[selection];
+  },
+
+  assignLetters: function (beats) {
+    var rightHand = true;
+    beats.forEach( function (beat) {
+      beat.letter = rightHand ? this.randomRightHand() : this.randomLeftHand();
+      rightHand = !rightHand;
+    }.bind(this));
+
+    // add empty first beat to beginning of array
+    beats.unshift({time: 0, letter: null});
+
+    return beats;
+  },
+
+  codeToLowerCase: function (e) {
+    return String.fromCharCode(e.which).toLowerCase();
   }
 
 };

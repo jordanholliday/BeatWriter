@@ -20186,10 +20186,23 @@
 	    e.preventDefault();
 	    if (e.which === 32) {
 	      this.togglePlay();
-	    } else if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
-	      this.setState({ score: this.state.score + 10 });
 	    } else if (this.state.beats) {
-	      null;
+	      this.scoreInput(e);
+	    }
+	  },
+	
+	  scoreInput: function (e) {
+	    // while scoring beats, check no score is already set. this rejects inputs
+	    // if that letter has already been scored
+	    if (this.state.beats[this.state.nextBeat].score) {
+	      return;
+	    }
+	    if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
+	      this.state.beats[this.state.nextBeat].score = 10;
+	      this.setState({ score: this.state.score + 10 });
+	    } else {
+	      this.state.beats[this.state.nextBeat].score = -2;
+	      this.setState({ score: this.state.score - 2 });
 	    }
 	  },
 	
@@ -20274,7 +20287,8 @@
 	      return React.createElement(Beat, {
 	        letter: this.state.beats ? this.state.beats[i].letter : null,
 	        selected: this.state.nextBeat === i,
-	        key: this.state.nextBeat + i
+	        key: this.state.nextBeat + i,
+	        score: this.state.beats[i].score
 	      });
 	    } else {
 	      return React.createElement(Beat, {
@@ -20396,7 +20410,10 @@
 	  render: function () {
 	    return React.createElement(
 	      "li",
-	      { className: this.props.selected ? "selected" : null },
+	      {
+	        className: this.props.selected ? "selected" : null,
+	        "data-score": this.props.score
+	      },
 	      this.props.letter ? this.props.letter : "🎧"
 	    );
 	  }

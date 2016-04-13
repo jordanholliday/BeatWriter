@@ -20243,7 +20243,7 @@
 	
 	  incrementBeat: function () {
 	    var nextBeat = this.state.nextBeat;
-	    if (this.state.beats[nextBeat + 1].time < this.state.localTime) {
+	    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
 	      this.setState({
 	        nextBeat: this.state.nextBeat + 1
 	      });
@@ -20323,7 +20323,9 @@
 	        React.createElement(
 	          'ul',
 	          { className: 'beat-letters' },
-	          this.renderBeats()
+	          React.createElement('div', { className: 'selected-before' }),
+	          this.renderBeats(),
+	          React.createElement('div', { className: 'selected-after' })
 	        ),
 	        React.createElement(
 	          'section',

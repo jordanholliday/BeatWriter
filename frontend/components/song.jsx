@@ -81,7 +81,7 @@ var Song = React.createClass({
 
   incrementBeat: function () {
     var nextBeat = this.state.nextBeat;
-    if (this.state.beats[nextBeat + 1].time < this.state.localTime) {
+    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
       this.setState({
         nextBeat: this.state.nextBeat + 1
       });
@@ -154,7 +154,9 @@ var Song = React.createClass({
       <div>
         <div className="game-layer" id="game-layer">
           <ul className="beat-letters">
+            <div className="selected-before"></div>
             {this.renderBeats()}
+            <div className="selected-after"></div>
           </ul>
           <section className="scoreboard">
             <h1>Score</h1>

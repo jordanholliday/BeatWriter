@@ -76,6 +76,7 @@ var Song = React.createClass({
       this.setState({ localTime: ytTime, ytTime: ytTime });
     }
 
+    this.addRules();
     this.incrementBeat();
   },
 
@@ -85,11 +86,23 @@ var Song = React.createClass({
       this.setState({
         nextBeat: this.state.nextBeat + 1
       });
+
+      this.removeRules();
     }
 
     if (nextBeat === this.state.beats.length - 1) {
       clearInterval(this.intervalVar);
     }
+  },
+
+  removeRules: function () {
+    $('.selected-before').addClass('new-beat');
+    $('.selected-after').addClass('new-beat');
+  },
+
+  addRules: function () {
+    $('.selected-before').removeClass('new-beat');
+    $('.selected-after').removeClass('new-beat');
   },
 
   enableIframeApi: function () {

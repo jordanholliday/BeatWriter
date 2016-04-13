@@ -51,7 +51,7 @@
   content: attr(data-score);
   position: absolute;
   width: 100%;
-  top: 5%;
+  top: 80%;
   left: 0;
   font-size: 24px;
 }
@@ -79,20 +79,19 @@
 
 .beat-letters .selected-before,
 .beat-letters .selected-after {
-  transition: width;
-  transition-duration: 1s;
+  transition: width, margin-left;
+  transition-duration: 2s;
 }
 
 .beat-letters .selected-before:before,
-.beat-letters .selected-before:after,
-.beat-letters .selected-after:after,
 .beat-letters .selected-after:before {
   content: "";
   position: absolute;
   border: none;
   border-bottom: 1px solid #fff;
-  width: 400px;
+  width: 840px;
   margin-top: 34px;
+  margin-left: -420px;
   transition: inherit;
   transition-duration: inherit;
 }
@@ -102,21 +101,13 @@
 .beat-letters .selected-after.new-beat:after,
 .beat-letters .selected-after.new-beat:before {
   width: 0px;
-  transition: width;
+  margin-left: 0px;
+  transition: width, margin-left;
   transition-duration: 0s;
 }
 
-.beat-letters .selected-before:after {
-  margin-left: -400px;
-}
-
-.beat-letters .selected-after:after,
 .beat-letters .selected-after:before  {
   margin-top: -35px;
-}
-
-.beat-letters .selected-after:before {
-  margin-left: -400px;
 }
 
 .beat-letters .selected-after {

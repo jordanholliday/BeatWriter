@@ -16,7 +16,7 @@ var Song = React.createClass({
   componentDidMount: function () {
     $(document.body).on('keydown', this.keyDownHandler);
     this.enableIframeApi();
-    ApiUtil.getSongBeats("1", this.storeSongBeats);
+    ApiUtil.getSongBeats("2", this.storeSongBeats);
   },
 
   componentWillUnmount: function () {
@@ -40,9 +40,11 @@ var Song = React.createClass({
     if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
       this.state.beats[this.state.nextBeat].score = 10;
       this.setState({score: this.state.score + 10});
+      $('.selected-before').addClass('highlight');
     } else {
       this.state.beats[this.state.nextBeat].score = -2;
       this.setState({score: this.state.score - 2});
+      $('.selected-after').addClass('highlight');
     }
   },
 
@@ -88,9 +90,10 @@ var Song = React.createClass({
       });
 
       this.removeRules();
+      this.removeHighlights();
     }
 
-    if (nextBeat === this.state.beats.length - 1) {
+    if (nextBeat === this.state.beats.length - 4) {
       clearInterval(this.intervalVar);
     }
   },
@@ -105,6 +108,11 @@ var Song = React.createClass({
     $('.selected-after').removeClass('new-beat');
   },
 
+  removeHighlights: function () {
+    $('.selected-before').removeClass('highlight');
+    $('.selected-after').removeClass('highlight');
+  },
+
   enableIframeApi: function () {
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -115,7 +123,7 @@ var Song = React.createClass({
     var youtubeId = this.props.youtubeId;
     onYouTubeIframeAPIReady = function () {
       player = new YT.Player('song-container', {
-        videoId: "KEI4qSrkPAs",
+        videoId: "tjecYugTbIQ",
         height: window.innerHeight,
         width: window.innerWidth,
         modestBranding: 1,

@@ -48,6 +48,7 @@
 	    ReactDOM = __webpack_require__(32),
 	    Composer = __webpack_require__(166),
 	    Song = __webpack_require__(168),
+	    SplashPage = __webpack_require__(228),
 	    ReactRouter = __webpack_require__(171),
 	    Router = ReactRouter.Router,
 	    Route = ReactRouter.Route,
@@ -58,7 +59,8 @@
 	  Router,
 	  { history: hashHistory },
 	  React.createElement(Route, { path: '/song', component: Song }),
-	  React.createElement(Route, { path: '/composer', component: Composer })
+	  React.createElement(Route, { path: '/composer', component: Composer }),
+	  React.createElement(Route, { path: '/', component: SplashPage })
 	);
 	
 	$(document).on('ready', function () {
@@ -20061,7 +20063,7 @@
 	    } else if (e.which === 188 || e.which === 190) {
 	      ApiUtil.addBeat({
 	        time: this.state.localTime,
-	        song_id: "1"
+	        song_id: "2"
 	      });
 	    }
 	  },
@@ -20085,7 +20087,7 @@
 	    var youtubeId = this.props.youtubeId;
 	    onYouTubeIframeAPIReady = function () {
 	      player = new YT.Player('song-container', {
-	        videoId: "KEI4qSrkPAs",
+	        videoId: "tjecYugTbIQ",
 	        height: window.innerHeight,
 	        width: window.innerWidth,
 	        modestBranding: 1,
@@ -20174,7 +20176,7 @@
 	  componentDidMount: function () {
 	    $(document.body).on('keydown', this.keyDownHandler);
 	    this.enableIframeApi();
-	    ApiUtil.getSongBeats("1", this.storeSongBeats);
+	    ApiUtil.getSongBeats("2", this.storeSongBeats);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -20200,9 +20202,11 @@
 	    if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
 	      this.state.beats[this.state.nextBeat].score = 10;
 	      this.setState({ score: this.state.score + 10 });
+	      $('.selected-before').addClass('highlight');
 	    } else {
 	      this.state.beats[this.state.nextBeat].score = -2;
 	      this.setState({ score: this.state.score - 2 });
+	      $('.selected-after').addClass('highlight');
 	    }
 	  },
 	
@@ -20250,9 +20254,10 @@
 	      });
 	
 	      this.removeRules();
+	      this.removeHighlights();
 	    }
 	
-	    if (nextBeat === this.state.beats.length - 1) {
+	    if (nextBeat === this.state.beats.length - 4) {
 	      clearInterval(this.intervalVar);
 	    }
 	  },
@@ -20267,6 +20272,11 @@
 	    $('.selected-after').removeClass('new-beat');
 	  },
 	
+	  removeHighlights: function () {
+	    $('.selected-before').removeClass('highlight');
+	    $('.selected-after').removeClass('highlight');
+	  },
+	
 	  enableIframeApi: function () {
 	    var tag = document.createElement('script');
 	    tag.src = "https://www.youtube.com/iframe_api";
@@ -20277,7 +20287,7 @@
 	    var youtubeId = this.props.youtubeId;
 	    onYouTubeIframeAPIReady = function () {
 	      player = new YT.Player('song-container', {
-	        videoId: "KEI4qSrkPAs",
+	        videoId: "tjecYugTbIQ",
 	        height: window.innerHeight,
 	        width: window.innerWidth,
 	        modestBranding: 1,
@@ -25565,6 +25575,52 @@
 	
 	exports['default'] = _createRouterHistory2['default'](_historyLibCreateHashHistory2['default']);
 	module.exports = exports['default'];
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var SplashPage = React.createClass({
+	  displayName: "SplashPage",
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "splash-bg" },
+	      React.createElement(
+	        "h1",
+	        null,
+	        "BeatWriter",
+	        React.createElement(
+	          "span",
+	          { className: "cursor" },
+	          "|"
+	        )
+	      ),
+	      React.createElement(
+	        "h2",
+	        null,
+	        "Press ",
+	        React.createElement(
+	          "span",
+	          { className: "key" },
+	          "SPACE"
+	        ),
+	        " for track list or ",
+	        React.createElement(
+	          "span",
+	          { className: "key" },
+	          "?"
+	        ),
+	        " for instructions."
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SplashPage;
 
 /***/ }
 /******/ ]);

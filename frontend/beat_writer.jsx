@@ -2,6 +2,7 @@ var React = require('react'),
     ReactDOM = require('react-dom'),
     Composer = require('./components/composer'),
     Song = require('./components/song'),
+    SplashPage = require('./components/splash_page'),
     ReactRouter = require('react-router'),
     Router = ReactRouter.Router,
     Route = ReactRouter.Route,
@@ -12,6 +13,7 @@ var router = (
   <Router history={hashHistory}>
     <Route path="/song" component={Song} />
     <Route path="/composer" component={Composer} />
+    <Route path="/" component={SplashPage} />
   </Router>
 );
 

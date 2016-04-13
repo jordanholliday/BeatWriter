@@ -1,0 +1,53 @@
+.splash-bg {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000;
+}
+
+.splash-bg h1 {
+  color: #fff;
+  font-size: 8em;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 200px;
+  position: relative;
+  /* after psuedo content positioned absolute */
+}
+
+.splash-bg h1 .cursor {
+  font-size: 1.3em;
+  color: #268bd2;
+  animation: blink-animation .9s steps(5, start) infinite;
+  -webkit-animation: blink-animation .9s steps(5, start) infinite;
+}
+
+.splash-bg h2 {
+  font-size: 1.25em;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+}
+
+.key {
+  border: 1px solid #fff;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  text-transform: uppercase;
+  font-family: 'Cousine', monospace;
+  font-weight: 700;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}

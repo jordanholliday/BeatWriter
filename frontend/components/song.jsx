@@ -26,6 +26,7 @@ var Song = React.createClass({
 
   componentWillUnmount: function () {
     $(document.body).off('keydown', this.keyDownHandler);
+    if (this.intervalVar) {clearInterval(this.intervalVar)}
   },
 
   keyDownHandler: function (e) {

@@ -30,7 +30,6 @@ var TrackList = React.createClass({
       if (selectedTrack >= this.state.tracks.length) {selectedTrack = this.state.tracks.length -1;}
       this.setState({selectedTrack: selectedTrack});
     } else if (e.which === 13 && this.state.tracks) {
-      debugger
       var trackId = this.state.tracks[this.state.selectedTrack].song_id
       this.context.router.push("/song/" + trackId);
     }

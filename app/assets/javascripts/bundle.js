@@ -20205,6 +20205,9 @@
 	
 	  componentWillUnmount: function () {
 	    $(document.body).off('keydown', this.keyDownHandler);
+	    if (this.intervalVar) {
+	      clearInterval(this.intervalVar);
+	    }
 	  },
 	
 	  keyDownHandler: function (e) {
@@ -30226,7 +30229,6 @@
 	      }
 	      this.setState({ selectedTrack: selectedTrack });
 	    } else if (e.which === 13 && this.state.tracks) {
-	      debugger;
 	      var trackId = this.state.tracks[this.state.selectedTrack].song_id;
 	      this.context.router.push("/song/" + trackId);
 	    }

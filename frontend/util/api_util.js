@@ -35,7 +35,6 @@ var ApiUtil = {
       dataType: 'json',
       success: function (songs) {
         callback(songs);
-        console.log(songs);
       },
       error: function () {
         console.log("ApiUtil#getSongs error");

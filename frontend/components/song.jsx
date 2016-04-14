@@ -15,7 +15,8 @@ var Song = React.createClass({
       localTime: 0,
       ytTime: 0,
       nextBeat: 0,
-      score: 0
+      score: 0,
+      playing: false
     }
   },
 
@@ -71,9 +72,11 @@ var Song = React.createClass({
     if (this.player.getPlayerState() !== 1) {
       this.player.playVideo();
       this.intervalVar = setInterval(this.playerTimeInterval, 10);
+      this.setState({playing: true});
     } else {
       this.player.pauseVideo();
       clearInterval(this.intervalVar);
+      this.setState({playing: false});
     }
   },
 
@@ -92,9 +95,6 @@ var Song = React.createClass({
 
   incrementBeat: function () {
     var nextBeat = this.state.nextBeat;
-    console.log("next beat time " + this.state.beats[nextBeat + 1].time);
-    console.log("local time " + this.state.localTime);
-    console.log("//");
     if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
       var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
       $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
@@ -160,6 +160,9 @@ var Song = React.createClass({
 
   renderBeats: function () {
     if (!this.state.beats) {return null;}
+    if (!this.state.playing) {
+      return <li className="pause-msg">Press <span className="key">Space</span> to go.</li>;
+    }
     var nextBeat = this.state.nextBeat;
     var beatArr = [];
 

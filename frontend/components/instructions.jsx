@@ -38,9 +38,9 @@ var Instructions = React.createClass({
           <ol>
             <li>BeatWriter is a typing tutor. Music plays and you type to the beat.</li>
             <li>Type the letter shown between the arrows.</li>
-            <li>You earn points for the typing the right letter.</li>
-            <li>Regrettably, you <em>lose</em> points for typing the wrong letter.</li>
-            <li>The letters advance like Bono—with or without you—and roughly in time with the music.</li>
+            <li>Earn points by the typing the right letter.</li>
+            <li><em>Lose</em> points by typing the wrong letter.</li>
+            <li>The letters advance like Bono: with or without you, and roughly in time with the music.</li>
           </ol>
         </div>
         <h2>

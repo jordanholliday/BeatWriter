@@ -20067,7 +20067,7 @@
 	    } else if (e.which === 188 || e.which === 190) {
 	      ApiUtil.addBeat({
 	        time: this.state.localTime,
-	        song_id: "5"
+	        song_id: "6"
 	      });
 	    }
 	  },
@@ -20091,7 +20091,7 @@
 	    var youtubeId = this.props.youtubeId;
 	    onYouTubeIframeAPIReady = function () {
 	      player = new YT.Player('song-container', {
-	        videoId: "1jre6_FBBc0",
+	        videoId: "xGytDsqkQY8",
 	        height: window.innerHeight,
 	        width: window.innerWidth,
 	        modestBranding: 1,
@@ -20279,31 +20279,45 @@
 	
 	  incrementBeat: function () {
 	    var nextBeat = this.state.nextBeat;
-	    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
-	      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
-	      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
-	      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
 	
+	    if (!this.state.beats[nextBeat + 1]) {
+	      clearInterval(this.intervalVar);
+	      return;
+	    }
+	
+	    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.08) {
 	      this.setState({
 	        nextBeat: this.state.nextBeat + 1
 	      });
 	
-	      $('.selected-before').addClass("new-beat").delay(25).queue(function () {
-	        $(this).removeClass("new-beat");
-	        $(this).dequeue();
-	      });
+	      if (nextBeat === this.state.beats.length) {
+	        clearInterval(this.intervalVar);
+	        return;
+	      }
 	
-	      $('.selected-after').addClass("new-beat").delay(25).queue(function () {
-	        $(this).removeClass("new-beat");
-	        $(this).dequeue();
-	      });
-	
-	      this.removeHighlights();
+	      this.newBeatCssAdjustments();
 	    }
+	  },
 	
-	    if (nextBeat === this.state.beats.length) {
-	      clearInterval(this.intervalVar);
+	  newBeatCssAdjustments: function () {
+	    if (!this.state.beats[this.state.nextBeat + 2].time) {
+	      return;
 	    }
+	    var timeTillNextBeat = this.state.beats[this.state.nextBeat + 2].time - this.state.beats[this.state.nextBeat + 1].time;
+	    $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
+	    $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
+	
+	    $('.selected-before').addClass("new-beat").delay(25).queue(function () {
+	      $(this).removeClass("new-beat");
+	      $(this).dequeue();
+	    });
+	
+	    $('.selected-after').addClass("new-beat").delay(25).queue(function () {
+	      $(this).removeClass("new-beat");
+	      $(this).dequeue();
+	    });
+	
+	    this.removeHighlights();
 	  },
 	
 	  removeRules: function () {
@@ -30164,23 +30178,22 @@
 	          React.createElement(
 	            'li',
 	            null,
-	            'You earn points for the typing the right letter.'
+	            'Earn points by the typing the right letter.'
 	          ),
 	          React.createElement(
 	            'li',
 	            null,
-	            'Regrettably, you ',
 	            React.createElement(
 	              'em',
 	              null,
-	              'lose'
+	              'Lose'
 	            ),
-	            ' points for typing the wrong letter.'
+	            ' points by typing the wrong letter.'
 	          ),
 	          React.createElement(
 	            'li',
 	            null,
-	            'The letters advance like Bono—with or without you—and roughly in time with the music.'
+	            'The letters advance like Bono: with or without you, and roughly in time with the music.'
 	          )
 	        )
 	      ),
@@ -30264,7 +30277,7 @@
 	      this.state.tracks.forEach(function (track) {
 	        trackArr.push(React.createElement(
 	          'li',
-	          null,
+	          { key: track.song_id },
 	          React.createElement(
 	            'span',
 	            { className: this.state.selectedTrack === i ? "selected" : null },

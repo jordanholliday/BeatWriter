@@ -50,7 +50,7 @@ var TrackList = React.createClass({
       var i = 0;
       this.state.tracks.forEach(function (track) {
         trackArr.push(
-          <li>
+          <li key={track.song_id}>
             <span className={this.state.selectedTrack === i ? "selected" : null}>
               {track.name}
             </span>

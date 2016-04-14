@@ -95,35 +95,48 @@ var Song = React.createClass({
 
   incrementBeat: function () {
     var nextBeat = this.state.nextBeat;
-    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
-      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
-      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
-      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
 
+    if (!this.state.beats[nextBeat + 1]) {
+      clearInterval(this.intervalVar);
+      return;
+    }
+
+    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.08) {
       this.setState({
         nextBeat: this.state.nextBeat + 1
       });
 
-      $('.selected-before').addClass("new-beat")
-                             .delay(25)
-                             .queue(function() {
-                                 $(this).removeClass("new-beat");
-                                 $(this).dequeue();
-                             });
+      if (nextBeat === this.state.beats.length) {
+        clearInterval(this.intervalVar);
+        return;
+      }
 
-      $('.selected-after').addClass("new-beat")
-                             .delay(25)
-                             .queue(function() {
-                                 $(this).removeClass("new-beat");
-                                 $(this).dequeue();
-                             });
-
-      this.removeHighlights();
+      this.newBeatCssAdjustments();
     }
+  },
 
-    if (nextBeat === this.state.beats.length) {
-      clearInterval(this.intervalVar);
-    }
+  newBeatCssAdjustments: function () {
+    if (!this.state.beats[this.state.nextBeat + 2].time) {return}
+    var timeTillNextBeat = this.state.beats[this.state.nextBeat + 2].time - this.state.beats[this.state.nextBeat + 1].time;
+    $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
+    $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
+
+
+    $('.selected-before').addClass("new-beat")
+                           .delay(25)
+                           .queue(function() {
+                               $(this).removeClass("new-beat");
+                               $(this).dequeue();
+                           });
+
+    $('.selected-after').addClass("new-beat")
+                           .delay(25)
+                           .queue(function() {
+                               $(this).removeClass("new-beat");
+                               $(this).dequeue();
+                           });
+
+    this.removeHighlights();
   },
 
   removeRules: function () {

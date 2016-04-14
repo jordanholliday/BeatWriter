@@ -20266,8 +20266,6 @@
 	    }
 	
 	    var ytTime = this.player.getCurrentTime();
-	    console.log(this.state.localTime);
-	    console.log(this.state.ytTime);
 	    if (ytTime === this.state.ytTime) {
 	      this.setState({ localTime: this.state.localTime + .01 });
 	    } else {
@@ -20278,10 +20276,11 @@
 	  },
 	
 	  incrementBeat: function () {
-	    console.log("incementing");
 	    var nextBeat = this.state.nextBeat;
+	    console.log("next beat time " + this.state.beats[nextBeat + 1].time);
+	    console.log("local time " + this.state.localTime);
+	    console.log("//");
 	    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
-	
 	      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
 	      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
 	      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";

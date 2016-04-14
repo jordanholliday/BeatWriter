@@ -3,6 +3,6 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :beats, only: [:create, :show]
-    resources :songs, only: [:show]
+    resources :songs, only: [:index, :show]
   end
 end

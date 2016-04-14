@@ -26,6 +26,21 @@ var ApiUtil = {
         console.log("ApiUtil#getSongBeats error");
       }
     });
+  },
+
+  getSongs: function (callback) {
+    $.ajax({
+      type: 'GET',
+      url: 'api/songs',
+      dataType: 'json',
+      success: function (songs) {
+        callback(songs);
+        console.log(songs);
+      },
+      error: function () {
+        console.log("ApiUtil#getSongs error");
+      }
+    });
   }
 };
 

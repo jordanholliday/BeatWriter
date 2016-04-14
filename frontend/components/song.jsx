@@ -2,9 +2,14 @@ var React = require('react'),
     ApiUtil = require('../util/api_util'),
     LetterUtil = require('../util/letter_util'),
     Beat = require('./beat'),
-    YouTubePlayer = require('youtube-player');
+    YouTubePlayer = require('youtube-player'),
+    YoutubeUtil = require('../util/youtube_util');
 
 var Song = React.createClass({
+  contextTypes: {
+      router: React.PropTypes.object.isRequired
+    },
+
   getInitialState: function () {
     return {
       localTime: 0,
@@ -16,19 +21,7 @@ var Song = React.createClass({
 
   componentDidMount: function () {
     $(document.body).on('keydown', this.keyDownHandler);
-    // this.enableIframeApi();
-    ApiUtil.getSongBeats("3", this.storeSongBeats);
-    this.player = new YT.Player('song-container', {
-      videoId: "CTAud5O7Qqk",
-      height: window.innerHeight,
-      width: window.innerWidth,
-      modestBranding: 1,
-      showinfo: 0,
-      controls: 0,
-      fs: 0,
-      disablekb: 0,
-      wmode: "transparent"
-    });
+    ApiUtil.getSongBeats(this.props.params.songId, this.storeSongBeats);
   },
 
   componentWillUnmount: function () {
@@ -68,6 +61,9 @@ var Song = React.createClass({
       name: song.name,
       songId: song.id
     });
+
+    // after storing beats, load YT player
+    this.player = YoutubeUtil.loadPlayer(song.youtube_id);
   },
 
   togglePlay: function () {
@@ -90,22 +86,40 @@ var Song = React.createClass({
       this.setState({ localTime: ytTime, ytTime: ytTime });
     }
 
-    this.addRules();
     this.incrementBeat();
   },
 
   incrementBeat: function () {
     var nextBeat = this.state.nextBeat;
     if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
+
+
+      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
+      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
+      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
+
       this.setState({
         nextBeat: this.state.nextBeat + 1
       });
 
-      this.removeRules();
+      $('.selected-before').addClass("new-beat")
+                             .delay(25)
+                             .queue(function() {
+                                 $(this).removeClass("new-beat");
+                                 $(this).dequeue();
+                             });
+
+      $('.selected-after').addClass("new-beat")
+                             .delay(25)
+                             .queue(function() {
+                                 $(this).removeClass("new-beat");
+                                 $(this).dequeue();
+                             });
+
       this.removeHighlights();
     }
 
-    if (nextBeat === this.state.beats.length - 4) {
+    if (nextBeat === this.state.beats.length) {
       clearInterval(this.intervalVar);
     }
   },
@@ -124,34 +138,6 @@ var Song = React.createClass({
     $('.selected-before').removeClass('highlight');
     $('.selected-after').removeClass('highlight');
   },
-
-  // enableIframeApi: function () {
-  //   var tag = document.createElement('script');
-  //   tag.src = "https://www.youtube.com/iframe_api";
-  //   var firstScriptTag = document.getElementsByTagName('script')[0];
-  //   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-  //    var player;
-  //    var youtubeId = this.props.youtubeId;
-  //    onYouTubeIframeAPIReady = function () {
-  //      player = new YT.Player('song-container', {
-  //        videoId: "KEI4qSrkPAs",
-  //        height: window.innerHeight,
-  //        width: window.innerWidth,
-  //        modestBranding: 1,
-  //        showinfo: 0,
-  //        controls: 0,
-  //        fs: 0,
-  //        disablekb: 0,
-  //        wmode: "transparent"
-  //      });
-  //    };
-
-  //    // make player in scope throughout composer
-  //    this.getPlayer = function () {
-  //      return player;
-  //    };
-  // },
 
   renderOneBeat: function (i) {
     if (this.state.beats[i]) {

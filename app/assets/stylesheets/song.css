@@ -12,7 +12,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  color: #777;
+  color: #888;
   text-align: center;
   background: rgba(0, 0, 0, .6);
 }
@@ -29,7 +29,7 @@
 .beat-letters li {
   display: inline-block;
   margin-right: 20px;
-  font-size: 88px;
+  font-size: 56px;
   line-height: 112px;
   text-align: center;
   width: 70px;
@@ -45,6 +45,7 @@
 .beat-letters li.selected {
   position: relative;
   color: #fff;
+  font-size: 88px;
 }
 
 .beat-letters li:after {

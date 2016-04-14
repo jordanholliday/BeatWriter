@@ -27,6 +27,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 # gem 'unicorn'
 
+# for CSV seeds
+gem "fast_seeder"
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -1,7 +1,8 @@
 var React = require('react'),
     ApiUtil = require('../util/api_util'),
     LetterUtil = require('../util/letter_util'),
-    Beat = require('./beat');
+    Beat = require('./beat'),
+    YouTubePlayer = require('youtube-player');
 
 var Song = React.createClass({
   getInitialState: function () {
@@ -15,8 +16,19 @@ var Song = React.createClass({
 
   componentDidMount: function () {
     $(document.body).on('keydown', this.keyDownHandler);
-    this.enableIframeApi();
-    ApiUtil.getSongBeats("2", this.storeSongBeats);
+    // this.enableIframeApi();
+    ApiUtil.getSongBeats("3", this.storeSongBeats);
+    this.player = new YT.Player('song-container', {
+      videoId: "CTAud5O7Qqk",
+      height: window.innerHeight,
+      width: window.innerWidth,
+      modestBranding: 1,
+      showinfo: 0,
+      controls: 0,
+      fs: 0,
+      disablekb: 0,
+      wmode: "transparent"
+    });
   },
 
   componentWillUnmount: function () {
@@ -59,19 +71,19 @@ var Song = React.createClass({
   },
 
   togglePlay: function () {
-    if (this.getPlayer().getPlayerState() !== 1) {
-      this.getPlayer().playVideo();
+    if (this.player.getPlayerState() !== 1) {
+      this.player.playVideo();
       this.intervalVar = setInterval(this.playerTimeInterval, 10);
     } else {
-      this.getPlayer().pauseVideo();
+      this.player.pauseVideo();
       clearInterval(this.intervalVar);
     }
   },
 
   playerTimeInterval: function () {
-    if (this.getPlayer().getPlayerState() !== 1) {return;}
+    if (this.player.getPlayerState() !== 1) {return;}
 
-    var ytTime = this.getPlayer().getCurrentTime();
+    var ytTime = this.player.getCurrentTime();
     if (ytTime === this.state.ytTime) {
       this.setState({ localTime: this.state.localTime + .01 });
     } else {
@@ -113,33 +125,33 @@ var Song = React.createClass({
     $('.selected-after').removeClass('highlight');
   },
 
-  enableIframeApi: function () {
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  // enableIframeApi: function () {
+  //   var tag = document.createElement('script');
+  //   tag.src = "https://www.youtube.com/iframe_api";
+  //   var firstScriptTag = document.getElementsByTagName('script')[0];
+  //   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    var player;
-    var youtubeId = this.props.youtubeId;
-    onYouTubeIframeAPIReady = function () {
-      player = new YT.Player('song-container', {
-        videoId: "tjecYugTbIQ",
-        height: window.innerHeight,
-        width: window.innerWidth,
-        modestBranding: 1,
-        showinfo: 0,
-        controls: 0,
-        fs: 0,
-        disablekb: 0,
-        wmode: "transparent"
-      });
-    }
+  //    var player;
+  //    var youtubeId = this.props.youtubeId;
+  //    onYouTubeIframeAPIReady = function () {
+  //      player = new YT.Player('song-container', {
+  //        videoId: "KEI4qSrkPAs",
+  //        height: window.innerHeight,
+  //        width: window.innerWidth,
+  //        modestBranding: 1,
+  //        showinfo: 0,
+  //        controls: 0,
+  //        fs: 0,
+  //        disablekb: 0,
+  //        wmode: "transparent"
+  //      });
+  //    };
 
-    // make player in scope throughout composer
-    this.getPlayer = function () {
-      return player;
-    }
-  },
+  //    // make player in scope throughout composer
+  //    this.getPlayer = function () {
+  //      return player;
+  //    };
+  // },
 
   renderOneBeat: function (i) {
     if (this.state.beats[i]) {

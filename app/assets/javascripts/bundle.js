@@ -20266,6 +20266,8 @@
 	    }
 	
 	    var ytTime = this.player.getCurrentTime();
+	    console.log(this.state.localTime);
+	    console.log(this.state.ytTime);
 	    if (ytTime === this.state.ytTime) {
 	      this.setState({ localTime: this.state.localTime + .01 });
 	    } else {
@@ -20276,6 +20278,7 @@
 	  },
 	
 	  incrementBeat: function () {
+	    console.log("incementing");
 	    var nextBeat = this.state.nextBeat;
 	    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.03) {
 	

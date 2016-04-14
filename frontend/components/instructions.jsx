@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+    YoutubeUtil = require('../util/youtube_util');
 
 var Instructions = React.createClass({
   contextTypes: {

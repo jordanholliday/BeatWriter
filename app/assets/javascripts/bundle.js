@@ -30087,7 +30087,8 @@
 /* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    YoutubeUtil = __webpack_require__(285);
 	
 	var Instructions = React.createClass({
 	  displayName: 'Instructions',

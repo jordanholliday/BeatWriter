@@ -41,7 +41,7 @@ var Instructions = React.createClass({
             <li>Earn points by the typing the right letter.</li>
             <li><em>Lose</em> points by typing the wrong letter.</li>
             <li>The letters move like Bono: with or without you, and roughly in time with the music.</li>
-            <li>It's pretty tough at first. Summer Song is a good warm-up.</li>
+            <li>It's pretty tough at first. Summer Song is a good warm up.</li>
           </ol>
         </div>
         <h2>

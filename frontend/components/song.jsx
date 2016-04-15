@@ -41,16 +41,18 @@ var Song = React.createClass({
   },
 
   scoreInput: function (e) {
-    // while scoring beats, check no score is already set. this rejects inputs
-    // if that letter has already been scored
-    if (this.state.beats[this.state.nextBeat].score) {return;}
+    // while scoring beats, check no score is already set.
+    // if (score), deduct two points for wrong letters - stops button mashing -
+    // and then return; immediately return for correct letters
     if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
+      if (this.state.beats[this.state.nextBeat].score) {return;}
       this.state.beats[this.state.nextBeat].score = 10;
       this.setState({score: this.state.score + 10});
       $('.selected-before').addClass('highlight');
     } else {
-      this.state.beats[this.state.nextBeat].score = -2;
       this.setState({score: this.state.score - 2});
+      if (this.state.beats[this.state.nextBeat].score) {return;}
+      this.state.beats[this.state.nextBeat].score = -2;
       $('.selected-after').addClass('highlight');
     }
   },

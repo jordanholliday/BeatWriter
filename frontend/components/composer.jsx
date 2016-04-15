@@ -33,7 +33,7 @@ var Composer = React.createClass({
     } else if (e.which === 188 || e.which === 190) {
       ApiUtil.addBeat({
         time: this.state.localTime,
-        song_id: "6"
+        song_id: "10"
       });
     }
   },
@@ -57,7 +57,7 @@ var Composer = React.createClass({
     var youtubeId = this.props.youtubeId;
     onYouTubeIframeAPIReady = function () {
       player = new YT.Player('song-container', {
-        videoId: "xGytDsqkQY8",
+        videoId: "CBAHJ6WjAZY",
         height: window.innerHeight,
         width: window.innerWidth,
         modestBranding: 1,

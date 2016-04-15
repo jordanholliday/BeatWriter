@@ -20067,7 +20067,7 @@
 	    } else if (e.which === 188 || e.which === 190) {
 	      ApiUtil.addBeat({
 	        time: this.state.localTime,
-	        song_id: "6"
+	        song_id: "10"
 	      });
 	    }
 	  },
@@ -20091,7 +20091,7 @@
 	    var youtubeId = this.props.youtubeId;
 	    onYouTubeIframeAPIReady = function () {
 	      player = new YT.Player('song-container', {
-	        videoId: "xGytDsqkQY8",
+	        videoId: "CBAHJ6WjAZY",
 	        height: window.innerHeight,
 	        width: window.innerWidth,
 	        modestBranding: 1,
@@ -20290,35 +20290,33 @@
 	        nextBeat: this.state.nextBeat + 1
 	      });
 	
+	      if (!this.state.beats[nextBeat + 2].time) {
+	        return;
+	      }
+	      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
+	      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
+	      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
+	
+	      $('.selected-before').addClass("new-beat").delay(25).queue(function () {
+	        $(this).removeClass("new-beat");
+	        $(this).dequeue();
+	      });
+	
+	      $('.selected-after').addClass("new-beat").delay(25).queue(function () {
+	        $(this).removeClass("new-beat");
+	        $(this).dequeue();
+	      });
+	
+	      this.removeHighlights();
+	
 	      if (nextBeat === this.state.beats.length) {
 	        clearInterval(this.intervalVar);
 	        return;
 	      }
-	
-	      this.newBeatCssAdjustments();
 	    }
 	  },
 	
-	  newBeatCssAdjustments: function () {
-	    if (!this.state.beats[this.state.nextBeat + 2].time) {
-	      return;
-	    }
-	    var timeTillNextBeat = this.state.beats[this.state.nextBeat + 2].time - this.state.beats[this.state.nextBeat + 1].time;
-	    $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
-	    $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
-	
-	    $('.selected-before').addClass("new-beat").delay(25).queue(function () {
-	      $(this).removeClass("new-beat");
-	      $(this).dequeue();
-	    });
-	
-	    $('.selected-after').addClass("new-beat").delay(25).queue(function () {
-	      $(this).removeClass("new-beat");
-	      $(this).dequeue();
-	    });
-	
-	    this.removeHighlights();
-	  },
+	  newBeatCssAdjustments: function () {},
 	
 	  removeRules: function () {
 	    $('.selected-before').addClass('new-beat');
@@ -20360,13 +20358,18 @@
 	      return React.createElement(
 	        'li',
 	        { className: 'pause-msg' },
-	        'Press ',
 	        React.createElement(
 	          'span',
 	          { className: 'key' },
 	          'Space'
 	        ),
-	        ' to go.'
+	        ' to start, ',
+	        React.createElement(
+	          'span',
+	          { className: 'key' },
+	          'Space'
+	        ),
+	        ' to stop'
 	      );
 	    }
 	    var nextBeat = this.state.nextBeat;
@@ -30193,7 +30196,12 @@
 	          React.createElement(
 	            'li',
 	            null,
-	            'The letters advance like Bono: with or without you, and roughly in time with the music.'
+	            'The letters move like Bono: with or without you, and roughly in time with the music.'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'It\'s pretty tough at first. Summer Song is a good warm-up.'
 	          )
 	        )
 	      ),

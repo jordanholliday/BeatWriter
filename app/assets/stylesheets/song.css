@@ -50,10 +50,11 @@
 
 .beat-letters li.pause-msg {
   width: 840px;
-  color: #fff;
   font-size: 20px;
   line-height: 131px;
   height: 131px;
+  color: #fff;
+  background: #000;
 }
 
 .beat-letters li:after {

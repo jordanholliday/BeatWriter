@@ -106,37 +106,36 @@ var Song = React.createClass({
         nextBeat: this.state.nextBeat + 1
       });
 
+      if (!this.state.beats[nextBeat + 2].time) {return}
+      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
+      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
+      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
+
+
+      $('.selected-before').addClass("new-beat")
+                             .delay(25)
+                             .queue(function() {
+                                 $(this).removeClass("new-beat");
+                                 $(this).dequeue();
+                             });
+
+      $('.selected-after').addClass("new-beat")
+                             .delay(25)
+                             .queue(function() {
+                                 $(this).removeClass("new-beat");
+                                 $(this).dequeue();
+                             });
+
+      this.removeHighlights();
+
       if (nextBeat === this.state.beats.length) {
         clearInterval(this.intervalVar);
         return;
       }
-
-      this.newBeatCssAdjustments();
     }
   },
 
   newBeatCssAdjustments: function () {
-    if (!this.state.beats[this.state.nextBeat + 2].time) {return}
-    var timeTillNextBeat = this.state.beats[this.state.nextBeat + 2].time - this.state.beats[this.state.nextBeat + 1].time;
-    $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
-    $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
-
-
-    $('.selected-before').addClass("new-beat")
-                           .delay(25)
-                           .queue(function() {
-                               $(this).removeClass("new-beat");
-                               $(this).dequeue();
-                           });
-
-    $('.selected-after').addClass("new-beat")
-                           .delay(25)
-                           .queue(function() {
-                               $(this).removeClass("new-beat");
-                               $(this).dequeue();
-                           });
-
-    this.removeHighlights();
   },
 
   removeRules: function () {
@@ -174,7 +173,10 @@ var Song = React.createClass({
   renderBeats: function () {
     if (!this.state.beats) {return null;}
     if (!this.state.playing) {
-      return <li className="pause-msg">Press <span className="key">Space</span> to go.</li>;
+      return (
+        <li className="pause-msg">
+          <span className="key">Space</span> to start, <span className="key">Space</span> to stop
+        </li>);
     }
     var nextBeat = this.state.nextBeat;
     var beatArr = [];

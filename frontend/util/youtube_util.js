@@ -6,7 +6,7 @@ var YoutubeUtil = {
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   },
 
-  loadPlayer: function (youtubeId) {
+  loadPlayer: function (youtubeId, onPlayerStateChange) {
     return new YT.Player('song-container', {
       videoId: youtubeId,
       height: window.innerHeight,
@@ -17,7 +17,10 @@ var YoutubeUtil = {
       fs: 0,
       disablekb: 0,
       rel:0,
-      wmode: "transparent"
+      wmode: "transparent",
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
     });
   }
 };

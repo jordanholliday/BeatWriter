@@ -20179,23 +20179,14 @@
 	    LetterUtil = __webpack_require__(169),
 	    Beat = __webpack_require__(170),
 	    YouTubePlayer = __webpack_require__(171),
-	    YoutubeUtil = __webpack_require__(285);
+	    YoutubeUtil = __webpack_require__(285),
+	    CssUtil = __webpack_require__(346);
 	
 	var Song = React.createClass({
 	  displayName: 'Song',
 	
 	  contextTypes: {
 	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      localTime: 0,
-	      ytTime: 0,
-	      nextBeat: 0,
-	      score: 0,
-	      playing: false
-	    };
 	  },
 	
 	  componentDidMount: function () {
@@ -20208,6 +20199,16 @@
 	    if (this.intervalVar) {
 	      clearInterval(this.intervalVar);
 	    }
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      localTime: 0,
+	      ytTime: 0,
+	      nextBeat: 0,
+	      score: 0,
+	      playing: false
+	    };
 	  },
 	
 	  keyDownHandler: function (e) {
@@ -20228,16 +20229,9 @@
 	      if (this.state.beats[this.state.nextBeat].score) {
 	        return;
 	      }
-	      this.state.beats[this.state.nextBeat].score = 10;
-	      this.setState({ score: this.state.score + 10 });
-	      $('.selected-before').addClass('highlight');
+	      this.updateScore(10);
 	    } else {
-	      this.setState({ score: this.state.score - 2 });
-	      if (this.state.beats[this.state.nextBeat].score) {
-	        return;
-	      }
-	      this.state.beats[this.state.nextBeat].score = -2;
-	      $('.selected-after').addClass('highlight');
+	      this.updateScore(-2);
 	    }
 	  },
 	
@@ -20251,7 +20245,7 @@
 	    });
 	
 	    // after storing beats, load YT player
-	    this.player = YoutubeUtil.loadPlayer(song.youtube_id);
+	    this.player = YoutubeUtil.loadPlayer(song.youtube_id, this.checkVideoOver);
 	  },
 	
 	  togglePlay: function () {
@@ -20263,6 +20257,21 @@
 	      this.player.pauseVideo();
 	      clearInterval(this.intervalVar);
 	      this.setState({ playing: false });
+	    }
+	  },
+	
+	  updateScore: function (points) {
+	    this.setState({ score: this.state.score + points });
+	
+	    if (points < 0) {
+	      var score = this.state.beats[this.state.nextBeat].score;
+	      this.state.beats[this.state.nextBeat].score = score ? score - 2 : -2;
+	      $('.selected-after').addClass('highlight');
+	      $('.selected-before').removeClass('highlight');
+	    } else if (points > 0) {
+	      this.state.beats[this.state.nextBeat].score = 10;
+	      $('.selected-before').addClass('highlight');
+	      $('.selected-after').removeClass('highlight');
 	    }
 	  },
 	
@@ -20282,59 +20291,35 @@
 	  },
 	
 	  incrementBeat: function () {
-	    var nextBeat = this.state.nextBeat;
-	
-	    if (!this.state.beats[nextBeat + 1]) {
+	    // if the current nextBeat is the final beat, clear interval after .5s and return
+	    if (!this.state.beats[this.state.nextBeat + 1] && this.state.localTime - 0.5 > this.state.beats[this.state.nextBeat].time) {
 	      clearInterval(this.intervalVar);
 	      return;
 	    }
 	
-	    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.08) {
+	    // otherwise update nextBeat
+	    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.08) {
+	      var nextBeat = this.state.nextBeat + 1;
 	      this.setState({
-	        nextBeat: this.state.nextBeat + 1
+	        nextBeat: nextBeat
 	      });
 	
-	      if (!this.state.beats[nextBeat + 2].time) {
-	        return;
+	      if (!this.state.beats[nextBeat + 1]) {
+	        CssUtil.flashRules(.5);
+	      } else {
+	        var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
+	        CssUtil.flashRules(timeTillNextBeat);
 	      }
-	      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
-	      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
-	      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
 	
-	      $('.selected-before').addClass("new-beat").delay(25).queue(function () {
-	        $(this).removeClass("new-beat");
-	        $(this).dequeue();
-	      });
-	
-	      $('.selected-after').addClass("new-beat").delay(25).queue(function () {
-	        $(this).removeClass("new-beat");
-	        $(this).dequeue();
-	      });
-	
-	      this.removeHighlights();
-	
-	      if (nextBeat === this.state.beats.length) {
-	        clearInterval(this.intervalVar);
-	        return;
-	      }
+	      CssUtil.removeHighlights();
 	    }
 	  },
 	
-	  newBeatCssAdjustments: function () {},
-	
-	  removeRules: function () {
-	    $('.selected-before').addClass('new-beat');
-	    $('.selected-after').addClass('new-beat');
-	  },
-	
-	  addRules: function () {
-	    $('.selected-before').removeClass('new-beat');
-	    $('.selected-after').removeClass('new-beat');
-	  },
-	
-	  removeHighlights: function () {
-	    $('.selected-before').removeClass('highlight');
-	    $('.selected-after').removeClass('highlight');
+	  checkVideoOver: function () {
+	    if (this.player.getPlayerState() === 0) {
+	      clearInterval(this.intervalVar);
+	      this.context.router.push("/track-list");
+	    }
 	  },
 	
 	  renderOneBeat: function (i) {
@@ -30036,7 +30021,7 @@
 	    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	  },
 	
-	  loadPlayer: function (youtubeId) {
+	  loadPlayer: function (youtubeId, onPlayerStateChange) {
 	    return new YT.Player('song-container', {
 	      videoId: youtubeId,
 	      height: window.innerHeight,
@@ -30047,7 +30032,10 @@
 	      fs: 0,
 	      disablekb: 0,
 	      rel: 0,
-	      wmode: "transparent"
+	      wmode: "transparent",
+	      events: {
+	        'onStateChange': onPlayerStateChange
+	      }
 	    });
 	  }
 	};
@@ -35492,6 +35480,34 @@
 	
 	exports['default'] = _createRouterHistory2['default'](_historyLibCreateHashHistory2['default']);
 	module.exports = exports['default'];
+
+/***/ },
+/* 346 */
+/***/ function(module, exports) {
+
+	var CssUtil = {
+	  flashRules: function (timeTillNextBeat) {
+	    $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
+	    $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
+	
+	    $('.selected-before').addClass("new-beat").delay(25).queue(function () {
+	      $(this).removeClass("new-beat");
+	      $(this).dequeue();
+	    });
+	
+	    $('.selected-after').addClass("new-beat").delay(25).queue(function () {
+	      $(this).removeClass("new-beat");
+	      $(this).dequeue();
+	    });
+	  },
+	
+	  removeHighlights: function () {
+	    $('.selected-before').removeClass('highlight');
+	    $('.selected-after').removeClass('highlight');
+	  }
+	};
+	
+	module.exports = CssUtil;
 
 /***/ }
 /******/ ]);

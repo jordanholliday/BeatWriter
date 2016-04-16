@@ -3,22 +3,13 @@ var React = require('react'),
     LetterUtil = require('../util/letter_util'),
     Beat = require('./beat'),
     YouTubePlayer = require('youtube-player'),
-    YoutubeUtil = require('../util/youtube_util');
+    YoutubeUtil = require('../util/youtube_util'),
+    CssUtil = require('../util/css_util');
 
 var Song = React.createClass({
   contextTypes: {
       router: React.PropTypes.object.isRequired
     },
-
-  getInitialState: function () {
-    return {
-      localTime: 0,
-      ytTime: 0,
-      nextBeat: 0,
-      score: 0,
-      playing: false
-    }
-  },
 
   componentDidMount: function () {
     $(document.body).on('keydown', this.keyDownHandler);
@@ -28,6 +19,16 @@ var Song = React.createClass({
   componentWillUnmount: function () {
     $(document.body).off('keydown', this.keyDownHandler);
     if (this.intervalVar) {clearInterval(this.intervalVar)}
+  },
+
+  getInitialState: function () {
+    return {
+      localTime: 0,
+      ytTime: 0,
+      nextBeat: 0,
+      score: 0,
+      playing: false
+    }
   },
 
   keyDownHandler: function (e) {
@@ -46,14 +47,9 @@ var Song = React.createClass({
     // and then return; immediately return for correct letters
     if (LetterUtil.codeToLowerCase(e) === this.state.beats[this.state.nextBeat].letter) {
       if (this.state.beats[this.state.nextBeat].score) {return;}
-      this.state.beats[this.state.nextBeat].score = 10;
-      this.setState({score: this.state.score + 10});
-      $('.selected-before').addClass('highlight');
+      this.updateScore(10);
     } else {
-      this.setState({score: this.state.score - 2});
-      if (this.state.beats[this.state.nextBeat].score) {return;}
-      this.state.beats[this.state.nextBeat].score = -2;
-      $('.selected-after').addClass('highlight');
+      this.updateScore(-2);
     }
   },
 
@@ -67,7 +63,7 @@ var Song = React.createClass({
     });
 
     // after storing beats, load YT player
-    this.player = YoutubeUtil.loadPlayer(song.youtube_id);
+    this.player = YoutubeUtil.loadPlayer(song.youtube_id, this.checkVideoOver);
   },
 
   togglePlay: function () {
@@ -79,6 +75,21 @@ var Song = React.createClass({
       this.player.pauseVideo();
       clearInterval(this.intervalVar);
       this.setState({playing: false});
+    }
+  },
+
+  updateScore: function (points) {
+    this.setState({score: this.state.score + points});
+
+    if (points < 0) {
+      var score = this.state.beats[this.state.nextBeat].score;
+      this.state.beats[this.state.nextBeat].score = score ? score - 2 : -2;
+      $('.selected-after').addClass('highlight');
+      $('.selected-before').removeClass('highlight');
+    } else if (points > 0) {
+      this.state.beats[this.state.nextBeat].score = 10;
+      $('.selected-before').addClass('highlight');
+      $('.selected-after').removeClass('highlight');
     }
   },
 
@@ -96,63 +107,35 @@ var Song = React.createClass({
   },
 
   incrementBeat: function () {
-    var nextBeat = this.state.nextBeat;
-
-    if (!this.state.beats[nextBeat + 1]) {
+    // if the current nextBeat is the final beat, clear interval after .5s and return
+    if ((!this.state.beats[this.state.nextBeat + 1]) && (this.state.localTime - 0.5 > this.state.beats[this.state.nextBeat].time)) {
       clearInterval(this.intervalVar);
       return;
     }
 
-    if (this.state.beats[nextBeat + 1].time < this.state.localTime + 0.08) {
+    // otherwise update nextBeat
+    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.08) {
+      var nextBeat = this.state.nextBeat + 1;
       this.setState({
-        nextBeat: this.state.nextBeat + 1
+        nextBeat: nextBeat
       });
 
-      if (!this.state.beats[nextBeat + 2].time) {return}
-      var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
-      $('.selected-before')[0].style.transitionDuration = timeTillNextBeat + "s";
-      $('.selected-after')[0].style.transitionDuration = timeTillNextBeat + "s";
-
-
-      $('.selected-before').addClass("new-beat")
-                             .delay(25)
-                             .queue(function() {
-                                 $(this).removeClass("new-beat");
-                                 $(this).dequeue();
-                             });
-
-      $('.selected-after').addClass("new-beat")
-                             .delay(25)
-                             .queue(function() {
-                                 $(this).removeClass("new-beat");
-                                 $(this).dequeue();
-                             });
-
-      this.removeHighlights();
-
-      if (nextBeat === this.state.beats.length) {
-        clearInterval(this.intervalVar);
-        return;
+      if (!this.state.beats[nextBeat + 1]) {
+        CssUtil.flashRules(.5);
+      } else {
+        var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
+        CssUtil.flashRules(timeTillNextBeat);
       }
+
+      CssUtil.removeHighlights();
     }
   },
 
-  newBeatCssAdjustments: function () {
-  },
-
-  removeRules: function () {
-    $('.selected-before').addClass('new-beat');
-    $('.selected-after').addClass('new-beat');
-  },
-
-  addRules: function () {
-    $('.selected-before').removeClass('new-beat');
-    $('.selected-after').removeClass('new-beat');
-  },
-
-  removeHighlights: function () {
-    $('.selected-before').removeClass('highlight');
-    $('.selected-after').removeClass('highlight');
+  checkVideoOver: function () {
+    if (this.player.getPlayerState() === 0) {
+      clearInterval(this.intervalVar);
+      this.context.router.push("/track-list");
+    }
   },
 
   renderOneBeat: function (i) {

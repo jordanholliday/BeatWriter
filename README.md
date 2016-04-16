@@ -2,7 +2,9 @@
 [Play now!](http://beatwriter.herokuapp.com)
 
 ### About
-BeatWriter is a browser-based typing tutor. Users type to the beat of a song while the music video plays in the background, and earn points for accurate typing. Basically, it’s *DDR*-meets-*Mavis Beacon Teaches Typing*.
+BeatWriter is a browser-based typing tutor. Users type to the beat of a song while the music video plays in the background, and earn points for accurate typing.
+
+Basically, it’s *DDR*-meets-*Mavis Beacon Teaches Typing*.
 
 ### Screenshots
 ##### Splash Page
@@ -23,7 +25,7 @@ BeatWriter is primarily React.js, plus a simple Ruby on Rails backend. Audio, vi
 
 While a video is playing, BeatWriter queries the embedded video player ~200 times per second to find the elapsed time. Once the elapsed time is greater than the time associated with the next beat in queue, the current beat increments and a new target letter is shown on screen.
 
-Interestingly, the iFrame API provides the elapsed time with 100,000th-second precision, but only updates the time it reports about every half second (meaning it might report an elapsed time of 0.**1**2345 seconds even after 0.**5**2345 seconds have elapsed).
+Interestingly, the iFrame API provides the elapsed time with 100,000th-second precision, but only updates the time it reports about every half second (meaning it might report an elapsed time of 0.**1**2345 seconds even after 0.**5**4321 seconds have elapsed).
 
 BeatWriter required more accurate timing info, so I implemented an internal timer as well. The `Song` component stores two “current” elapsed times in state: the `localTime`, and `youtubeTime`. `localTime` is initially set equal to `youtubeTime` time, and then incremented by 5ms every time BeatWriter queries the player for the elapsed time. When the player reports a new time, `youtubeTime` is updated, and `localTime` is again set equal to it. For all game logic, BeatWriter refers to the `localTime`.
 

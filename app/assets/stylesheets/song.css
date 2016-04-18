@@ -14,7 +14,7 @@
   right: 0;
   color: #eee;
   text-align: center;
-  background: rgba(0, 0, 0, .6);
+  background: rgba(0, 0, 0, .65);
 }
 
 .game-layer .beat-letters {
@@ -30,7 +30,7 @@
 }
 
 .beat-letters li {
-  font-size: 60px;
+  font-size: 56px;
   line-height: 112px;
   text-align: center;
   width: 70px;
@@ -71,6 +71,7 @@
 
 .beat-letters li:after {
   content: attr(data-score);
+  color: #fff;
   position: absolute;
   width: 100%;
   top: 80%;
@@ -78,14 +79,6 @@
   font-size: 24px;
 }
 
-.beat-letters li.selected:after {
-  content: attr(data-score);
-  position: absolute;
-  width: 100%;
-  top: 105%;
-  left: 0;
-  font-size: 24px;
-}
 
 .beat-letters .selected-before {
   content: "";
@@ -176,33 +169,33 @@
 /* KEYFRAM ANIMATIONS */
 @-webkit-keyframes letter-slide {
   0%   { right: 0; }
-  49%  { color: #ccc; font-size: 60px; }
-  50%  { color: #268bd2; font-size: 100px; }
-  58%  { color: #268bd2; font-size: 100px; }
-  62%  { color: #ccc; font-size: 60px; }
+  49%  { color: #ccc; font-size: 56px; }
+  50%  { color: #268bd2; font-size: 88px; }
+  58%  { color: #268bd2; font-size: 88px; }
+  62%  { color: #ccc; font-size: 56px; }
   100% { right: 90%; }
 }
 @-moz-keyframes letter-slide {
   0%   { right: 0; }
-  49%  { color: #ccc; font-size: 60px; }
-  50%  { color: #268bd2; font-size: 100px; }
-  59%  { color: #268bd2; font-size: 100px; }
-  62%  { color: #ccc; font-size: 60px; }
+  49%  { color: #ccc; font-size: 56px; }
+  50%  { color: #268bd2; font-size: 88px; }
+  59%  { color: #268bd2; font-size: 88px; }
+  62%  { color: #ccc; font-size: 56px; }
   100% { right: 90%; }
 }
 @-o-keyframes letter-slide {
  0%   { right: 0; }
- 48%  { color: #ccc; font-size: 60px; }
- 50%  { color: #268bd2; font-size: 100px; }
- 59%  { color: #268bd2; font-size: 100px; }
- 62%  { color: #ccc; font-size: 60px; }
+ 48%  { color: #ccc; font-size: 56px; }
+ 50%  { color: #268bd2; font-size: 88px; }
+ 59%  { color: #268bd2; font-size: 88px; }
+ 62%  { color: #ccc; font-size: 56px; }
  100% { right: 90%; }
 }
 @keyframes letter-slide {
   0%   { right: 0; }
-  48%  { color: #ccc; font-size: 60px; }
-  50%  { color: #268bd2; font-size: 100px; }
-  59%  { color: #268bd2; font-size: 100px; }
-  62%  { color: #ccc; font-size: 60px; }
+  48%  { color: #ccc; font-size: 56px; }
+  50%  { color: #268bd2; font-size: 88px; }
+  59%  { color: #268bd2; font-size: 88px; }
+  62%  { color: #ccc; font-size: 56px; }
   100% { right: 90%; }
 }

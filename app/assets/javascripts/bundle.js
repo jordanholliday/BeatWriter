@@ -20208,7 +20208,8 @@
 	      ytTime: 0,
 	      nextBeat: 0,
 	      score: 0,
-	      playing: false
+	      playing: false,
+	      lastStop: 0
 	    };
 	  },
 	
@@ -20250,14 +20251,14 @@
 	  },
 	
 	  togglePlay: function () {
-	    if (this.player && this.player.getPlayerState() !== 1) {
+	    if (this.player.getPlayerState && this.player.getPlayerState() !== 1) {
 	      this.player.playVideo();
 	      this.intervalVar = setInterval(this.playerTimeInterval, 10);
 	      this.setState({ playing: true });
 	    } else {
 	      this.player.pauseVideo();
 	      clearInterval(this.intervalVar);
-	      this.setState({ playing: false });
+	      this.setState({ playing: false, lastStop: this.state.localTime });
 	    }
 	  },
 	
@@ -20299,18 +20300,11 @@
 	    }
 	
 	    // otherwise update nextBeat
-	    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.08) {
+	    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.1) {
 	      var nextBeat = this.state.nextBeat + 1;
 	      this.setState({
 	        nextBeat: nextBeat
 	      });
-	
-	      if (!this.state.beats[nextBeat + 1]) {
-	        // CssUtil.flashRules(.5);
-	      } else {
-	          var timeTillNextBeat = this.state.beats[nextBeat + 1].time - this.state.beats[nextBeat].time;
-	          // CssUtil.flashRules(timeTillNextBeat);
-	        }
 	
 	      CssUtil.removeHighlights();
 	    }
@@ -20324,16 +20318,17 @@
 	  },
 	
 	  // no animation on video start in sliding-letter mode
-	  // checkVideoStart: function () {
-	  //   if (this.player.getPlayerState() === 1) {
-	  //     // add one for initial flash to account for empty placeholder beat
-	  //     var nextBeat = this.state.nextBeat === 0 ? 1 : this.state.nextBeat;
-	  //     CssUtil.flashRules(this.state.beats[nextBeat + 1].time - this.state.localTime);
-	  //   }
-	  // },
+	  checkVideoStart: function () {
+	    if (this.player.getPlayerState() === 1) {
+	      // add one for initial flash to account for empty placeholder beat
+	      var nextBeat = this.state.nextBeat === 0 ? 1 : this.state.nextBeat;
+	      CssUtil.flashRules(this.state.beats[nextBeat + 1].time - this.state.localTime);
+	    }
+	  },
 	
 	  onPlayerStateChange: function () {
 	    this.checkVideoOver();
+	    this.checkVideoStart();
 	  },
 	
 	  renderOneBeat: function (i) {
@@ -20377,7 +20372,8 @@
 	    var beatArr = [];
 	
 	    for (var i = nextBeat - 10 > 0 ? nextBeat - 10 : 0; i < this.state.beats.length && i < nextBeat + 10; i++) {
-	      if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.7) {
+	      // to display, beat must be within 1.7s of localTime AND at time after last video pause
+	      if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.7 && this.state.beats[i].time > this.state.lastStop + 1.0) {
 	        beatArr.push(this.renderOneBeat(i));
 	      }
 	    }

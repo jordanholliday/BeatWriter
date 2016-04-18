@@ -4,6 +4,7 @@ var React = require('react'),
     Beat = require('./beat'),
     YouTubePlayer = require('youtube-player'),
     YoutubeUtil = require('../util/youtube_util'),
+    ReactTransitionGroup = require('react-addons-transition-group'),
     CssUtil = require('../util/css_util');
 
 var Song = React.createClass({
@@ -63,11 +64,11 @@ var Song = React.createClass({
     });
 
     // after storing beats, load YT player
-    this.player = YoutubeUtil.loadPlayer(song.youtube_id, this.checkVideoOver);
+    this.player = YoutubeUtil.loadPlayer(song.youtube_id, this.onPlayerStateChange);
   },
 
   togglePlay: function () {
-    if (this.player.getPlayerState() !== 1) {
+    if (this.player && this.player.getPlayerState() !== 1) {
       this.player.playVideo();
       this.intervalVar = setInterval(this.playerTimeInterval, 10);
       this.setState({playing: true});
@@ -121,10 +122,10 @@ var Song = React.createClass({
       });
 
       if (!this.state.beats[nextBeat + 1]) {
-        CssUtil.flashRules(.5);
+        // CssUtil.flashRules(.5);
       } else {
-        var timeTillNextBeat = this.state.beats[nextBeat + 2].time - this.state.beats[nextBeat + 1].time;
-        CssUtil.flashRules(timeTillNextBeat);
+        var timeTillNextBeat = this.state.beats[nextBeat + 1].time - this.state.beats[nextBeat].time;
+        // CssUtil.flashRules(timeTillNextBeat);
       }
 
       CssUtil.removeHighlights();
@@ -138,19 +139,30 @@ var Song = React.createClass({
     }
   },
 
+  // no animation on video start in sliding-letter mode
+  // checkVideoStart: function () {
+  //   if (this.player.getPlayerState() === 1) {
+  //     // add one for initial flash to account for empty placeholder beat
+  //     var nextBeat = this.state.nextBeat === 0 ? 1 : this.state.nextBeat;
+  //     CssUtil.flashRules(this.state.beats[nextBeat + 1].time - this.state.localTime);
+  //   }
+  // },
+
+  onPlayerStateChange: function () {
+    this.checkVideoOver();
+  },
+
   renderOneBeat: function (i) {
     if (this.state.beats[i]) {
      return (<Beat
         letter={this.state.beats ? this.state.beats[i].letter : null}
-        selected={this.state.nextBeat === i}
-        key={this.state.nextBeat + i}
+        key={i + this.state.beats[i].letter}
         score={this.state.beats[i].score}
       />);
     } else {
       return (<Beat
         letter={null}
-        selected={this.state.nextBeat === i}
-        key={this.state.nextBeat + i}
+        key={i}
       />);
     }
   },
@@ -166,8 +178,10 @@ var Song = React.createClass({
     var nextBeat = this.state.nextBeat;
     var beatArr = [];
 
-    for (var i = nextBeat - 4; i < this.state.beats.length + 3 && i < nextBeat + 5; i++) {
-      beatArr.push(this.renderOneBeat(i));
+    for (var i = (nextBeat - 10 > 0 ? nextBeat - 10 : 0); i < this.state.beats.length && i < nextBeat + 10; i++) {
+      if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.7) {
+        beatArr.push(this.renderOneBeat(i));
+      }
     }
 
     return beatArr;
@@ -177,7 +191,7 @@ var Song = React.createClass({
     return (
       <div>
         <div className="game-layer" id="game-layer">
-          <ul className="beat-letters">
+          <ul className="group beat-letters">
             <div className="selected-before"></div>
             {this.renderBeats()}
             <div className="selected-after"></div>

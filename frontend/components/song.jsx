@@ -13,6 +13,7 @@ var Song = React.createClass({
     },
 
   componentDidMount: function () {
+    YoutubeUtil.loadApiScript()
     $(document.body).on('keydown', this.keyDownHandler);
     ApiUtil.getSongBeats(this.props.params.songId, this.storeSongBeats);
   },
@@ -66,13 +67,18 @@ var Song = React.createClass({
 
     // after storing beats, load YT player
     this.player = YoutubeUtil.loadPlayer(song.youtube_id, this.onPlayerStateChange);
+    if (!this.player){
+      // if the player did not come back defined,
+      // redirect to track listing to reload Youtube API
+      this.context.router.push('/track-list');
+    }
   },
 
   togglePlay: function () {
     if (this.player.getPlayerState && this.player.getPlayerState() !== 1) {
       this.player.playVideo();
       this.intervalVar = setInterval(this.playerTimeInterval, 10);
-      this.setState({playing: true});
+      this.setState({playing: true, localTime: this.state.ytTime});
     } else {
       this.player.pauseVideo();
       clearInterval(this.intervalVar);
@@ -138,7 +144,7 @@ var Song = React.createClass({
     if (this.player.getPlayerState() === 1) {
       // add one for initial flash to account for empty placeholder beat
       var nextBeat = this.state.nextBeat === 0 ? 1 : this.state.nextBeat;
-      CssUtil.flashRules(this.state.beats[nextBeat + 1].time - this.state.localTime);
+      CssUtil.flashRules(this.state.beats[nextBeat].time - this.state.localTime - 1.7);
     }
   },
 
@@ -165,14 +171,11 @@ var Song = React.createClass({
   renderBeats: function () {
     if (!this.state.beats) {return null;}
     if (!this.state.playing) {
-      return (
-        <li className="pause-msg">
-          <span className="key">Space</span> to start, <span className="key">Space</span> to stop
-        </li>);
+      return this.renderPauseMessage();
     }
+
     var nextBeat = this.state.nextBeat;
     var beatArr = [];
-
     for (var i = (nextBeat - 10 > 0 ? nextBeat - 10 : 0); i < this.state.beats.length && i < nextBeat + 10; i++) {
       // to display, beat must be within 1.7s of localTime AND at time after last video pause
       if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.7 && this.state.beats[i].time > this.state.lastStop + 1.0) {
@@ -181,6 +184,14 @@ var Song = React.createClass({
     }
 
     return beatArr;
+  },
+
+  renderPauseMessage: function () {
+    return (
+      <li className="pause-msg">
+        <span className="key">Space</span> to start, <span className="key">Space</span> to stop
+      </li>
+    );
   },
 
   render: function () {

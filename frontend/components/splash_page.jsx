@@ -15,6 +15,7 @@ var SplashPage = React.createClass({
 
   componentWillUnmount: function () {
     $(document.body).off('keydown', this.keyDownHandler);
+    this.context.router.push('/track-list');
   },
 
   keyDownHandler: function (e) {

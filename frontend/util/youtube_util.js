@@ -7,21 +7,31 @@ var YoutubeUtil = {
   },
 
   loadPlayer: function (youtubeId, onPlayerStateChange) {
-    return new YT.Player('song-container', {
-      videoId: youtubeId,
-      height: window.innerHeight,
-      width: window.innerWidth,
-      modestBranding: 1,
-      showinfo: 0,
-      controls: 0,
-      fs: 0,
-      disablekb: 0,
-      rel:0,
-      wmode: "transparent",
-      events: {
-        'onStateChange': onPlayerStateChange
-      }
-    });
+    // if YT is not yet defined, return false to redirect
+    // to TrackList
+    if (typeof YT === "undefined") {
+      return false;
+    } else {
+      return new YT.Player('song-container', {
+        videoId: youtubeId,
+        height: window.innerHeight,
+        width: window.innerWidth,
+        wmode: "transparent",
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          modestBranding: 1,
+          showinfo: 0,
+          fs: 0,
+          disablekb: 0,
+          rel:0,
+          iv_load_policy: 3
+        },
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
   }
 };
 

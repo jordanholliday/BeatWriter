@@ -20191,6 +20191,7 @@
 	  },
 	
 	  componentDidMount: function () {
+	    YoutubeUtil.loadApiScript();
 	    $(document.body).on('keydown', this.keyDownHandler);
 	    ApiUtil.getSongBeats(this.props.params.songId, this.storeSongBeats);
 	  },
@@ -20248,13 +20249,18 @@
 	
 	    // after storing beats, load YT player
 	    this.player = YoutubeUtil.loadPlayer(song.youtube_id, this.onPlayerStateChange);
+	    if (!this.player) {
+	      // if the player did not come back defined,
+	      // redirect to track listing to reload Youtube API
+	      this.context.router.push('/track-list');
+	    }
 	  },
 	
 	  togglePlay: function () {
 	    if (this.player.getPlayerState && this.player.getPlayerState() !== 1) {
 	      this.player.playVideo();
 	      this.intervalVar = setInterval(this.playerTimeInterval, 10);
-	      this.setState({ playing: true });
+	      this.setState({ playing: true, localTime: this.state.ytTime });
 	    } else {
 	      this.player.pauseVideo();
 	      clearInterval(this.intervalVar);
@@ -20322,7 +20328,7 @@
 	    if (this.player.getPlayerState() === 1) {
 	      // add one for initial flash to account for empty placeholder beat
 	      var nextBeat = this.state.nextBeat === 0 ? 1 : this.state.nextBeat;
-	      CssUtil.flashRules(this.state.beats[nextBeat + 1].time - this.state.localTime);
+	      CssUtil.flashRules(this.state.beats[nextBeat].time - this.state.localTime - 1.7);
 	    }
 	  },
 	
@@ -20351,26 +20357,11 @@
 	      return null;
 	    }
 	    if (!this.state.playing) {
-	      return React.createElement(
-	        'li',
-	        { className: 'pause-msg' },
-	        React.createElement(
-	          'span',
-	          { className: 'key' },
-	          'Space'
-	        ),
-	        ' to start, ',
-	        React.createElement(
-	          'span',
-	          { className: 'key' },
-	          'Space'
-	        ),
-	        ' to stop'
-	      );
+	      return this.renderPauseMessage();
 	    }
+	
 	    var nextBeat = this.state.nextBeat;
 	    var beatArr = [];
-	
 	    for (var i = nextBeat - 10 > 0 ? nextBeat - 10 : 0; i < this.state.beats.length && i < nextBeat + 10; i++) {
 	      // to display, beat must be within 1.7s of localTime AND at time after last video pause
 	      if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.7 && this.state.beats[i].time > this.state.lastStop + 1.0) {
@@ -20379,6 +20370,25 @@
 	    }
 	
 	    return beatArr;
+	  },
+	
+	  renderPauseMessage: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'pause-msg' },
+	      React.createElement(
+	        'span',
+	        { className: 'key' },
+	        'Space'
+	      ),
+	      ' to start, ',
+	      React.createElement(
+	        'span',
+	        { className: 'key' },
+	        'Space'
+	      ),
+	      ' to stop'
+	    );
 	  },
 	
 	  render: function () {
@@ -20861,6 +20871,7 @@
 	
 	  componentWillUnmount: function () {
 	    $(document.body).off('keydown', this.keyDownHandler);
+	    this.context.router.push('/track-list');
 	  },
 	
 	  keyDownHandler: function (e) {
@@ -20918,21 +20929,31 @@
 	  },
 	
 	  loadPlayer: function (youtubeId, onPlayerStateChange) {
-	    return new YT.Player('song-container', {
-	      videoId: youtubeId,
-	      height: window.innerHeight,
-	      width: window.innerWidth,
-	      modestBranding: 1,
-	      showinfo: 0,
-	      controls: 0,
-	      fs: 0,
-	      disablekb: 0,
-	      rel: 0,
-	      wmode: "transparent",
-	      events: {
-	        'onStateChange': onPlayerStateChange
-	      }
-	    });
+	    // if YT is not yet defined, return false to redirect
+	    // to TrackList
+	    if (typeof YT === "undefined") {
+	      return false;
+	    } else {
+	      return new YT.Player('song-container', {
+	        videoId: youtubeId,
+	        height: window.innerHeight,
+	        width: window.innerWidth,
+	        wmode: "transparent",
+	        playerVars: {
+	          'autoplay': 0,
+	          'controls': 0,
+	          modestBranding: 1,
+	          showinfo: 0,
+	          fs: 0,
+	          disablekb: 0,
+	          rel: 0,
+	          iv_load_policy: 3
+	        },
+	        events: {
+	          'onStateChange': onPlayerStateChange
+	        }
+	      });
+	    }
 	  }
 	};
 	

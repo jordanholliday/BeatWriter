@@ -54,27 +54,12 @@
   -moz-animation: none; /* Fx 5+ */
 }
 
-/*.beat-letters li.selected {
-  position: relative;
-  color: #fff;
-  font-size: 88px;
-}*/
-
-.beat-letters li.pause-msg {
-  width: 840px;
-  font-size: 20px;
-  line-height: 131px;
-  height: 131px;
-  color: #fff;
-  background: #000;
-}
-
 .beat-letters li:after {
   content: attr(data-score);
   color: #fff;
   position: absolute;
   width: 100%;
-  top: 80%;
+  top: 110%;
   left: 0;
   font-size: 24px;
 }
@@ -173,7 +158,8 @@
   50%  { color: #268bd2; font-size: 88px; }
   58%  { color: #268bd2; font-size: 88px; }
   62%  { color: #ccc; font-size: 56px; }
-  100% { right: 90%; }
+  95%  { opacity: 1.0; }
+  100% { right: 90%; opacity: 0.0; }
 }
 @-moz-keyframes letter-slide {
   0%   { right: 0; }
@@ -181,7 +167,8 @@
   50%  { color: #268bd2; font-size: 88px; }
   59%  { color: #268bd2; font-size: 88px; }
   62%  { color: #ccc; font-size: 56px; }
-  100% { right: 90%; }
+  95%  { opacity: 1.0; }
+  100% { right: 90%; opacity: 0.0; }
 }
 @-o-keyframes letter-slide {
  0%   { right: 0; }
@@ -189,7 +176,8 @@
  50%  { color: #268bd2; font-size: 88px; }
  59%  { color: #268bd2; font-size: 88px; }
  62%  { color: #ccc; font-size: 56px; }
- 100% { right: 90%; }
+ 95%  { opacity: 1.0; }
+ 100% { right: 90%; opacity: 0.0; }
 }
 @keyframes letter-slide {
   0%   { right: 0; }
@@ -197,5 +185,6 @@
   50%  { color: #268bd2; font-size: 88px; }
   59%  { color: #268bd2; font-size: 88px; }
   62%  { color: #ccc; font-size: 56px; }
-  100% { right: 90%; }
+  95%  { opacity: 1.0; }
+  100% { right: 90%; opacity: 0.0; }
 }

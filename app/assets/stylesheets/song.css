@@ -12,9 +12,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  color: #888;
+  color: #eee;
   text-align: center;
-  background: rgba(0, 0, 0, .6);
+  background: rgba(0, 0, 0, .65);
 }
 
 .game-layer .beat-letters {
@@ -22,31 +22,43 @@
   display: inline-block;
   font-weight: 600;
   white-space: nowrap;
+  width: 840px;
+  height: 131px;
+  text-align: left;
   position: relative;
   /* letter scores rendered via absolute-position arrows */
 }
 
 .beat-letters li {
-  display: inline-block;
-  margin-right: 20px;
   font-size: 56px;
   line-height: 112px;
   text-align: center;
   width: 70px;
   height: 120px;
+  position: absolute;
+  -webkit-animation: letter-slide 3.4s 1 linear; /* Safari 4+ */
+  -moz-animation: letter-slide 3.4s 1 linear; /* Fx 5+ */
+  animation: letter-slide 3.4s 1 linear;
+}
+
+.beat-letters li.pause-msg {
+  width: 840px;
+  font-size: 20px;
+  line-height: 131px;
+  height: 131px;
+  color: #fff;
+  background: #000;
   position: relative;
-  /* letter scores rendered via absolute-position arrows */
+  animation: none;
+  -webkit-animation: none; /* Safari 4+ */
+  -moz-animation: none; /* Fx 5+ */
 }
 
-.beat-letters li:last-of-type {
-  margin-right: 0;
-}
-
-.beat-letters li.selected {
+/*.beat-letters li.selected {
   position: relative;
   color: #fff;
   font-size: 88px;
-}
+}*/
 
 .beat-letters li.pause-msg {
   width: 840px;
@@ -59,6 +71,7 @@
 
 .beat-letters li:after {
   content: attr(data-score);
+  color: #fff;
   position: absolute;
   width: 100%;
   top: 80%;
@@ -66,14 +79,6 @@
   font-size: 24px;
 }
 
-.beat-letters li.selected:after {
-  content: attr(data-score);
-  position: absolute;
-  width: 100%;
-  top: 105%;
-  left: 0;
-  font-size: 24px;
-}
 
 .beat-letters .selected-before {
   content: "";
@@ -91,6 +96,7 @@
 .beat-letters .selected-after {
   transition: width, margin-left;
   transition-duration: 2s;
+  transition-timing-function: linear;
 }
 
 .beat-letters .selected-before.highlight {
@@ -158,4 +164,38 @@
 
 .scoreboard h2 {
   font-size: 40px;
+}
+
+/* KEYFRAM ANIMATIONS */
+@-webkit-keyframes letter-slide {
+  0%   { right: 0; }
+  49%  { color: #ccc; font-size: 56px; }
+  50%  { color: #268bd2; font-size: 88px; }
+  58%  { color: #268bd2; font-size: 88px; }
+  62%  { color: #ccc; font-size: 56px; }
+  100% { right: 90%; }
+}
+@-moz-keyframes letter-slide {
+  0%   { right: 0; }
+  49%  { color: #ccc; font-size: 56px; }
+  50%  { color: #268bd2; font-size: 88px; }
+  59%  { color: #268bd2; font-size: 88px; }
+  62%  { color: #ccc; font-size: 56px; }
+  100% { right: 90%; }
+}
+@-o-keyframes letter-slide {
+ 0%   { right: 0; }
+ 48%  { color: #ccc; font-size: 56px; }
+ 50%  { color: #268bd2; font-size: 88px; }
+ 59%  { color: #268bd2; font-size: 88px; }
+ 62%  { color: #ccc; font-size: 56px; }
+ 100% { right: 90%; }
+}
+@keyframes letter-slide {
+  0%   { right: 0; }
+  48%  { color: #ccc; font-size: 56px; }
+  50%  { color: #268bd2; font-size: 88px; }
+  59%  { color: #268bd2; font-size: 88px; }
+  62%  { color: #ccc; font-size: 56px; }
+  100% { right: 90%; }
 }

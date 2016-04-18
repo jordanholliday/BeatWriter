@@ -32,7 +32,7 @@ var LetterUtil = {
       rightHand = !rightHand;
     }.bind(this));
 
-    // add empty first beat to beginning of array
+    // add empty beat to beginning of array to offset first real beat
     beats.unshift({time: 0, letter: null});
 
     return beats;

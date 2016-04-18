@@ -20300,7 +20300,7 @@
 	
 	  incrementBeat: function () {
 	    // if the current nextBeat is the final beat, clear interval after .5s and return
-	    if (!this.state.beats[this.state.nextBeat + 1] && this.state.localTime - 0.5 > this.state.beats[this.state.nextBeat].time) {
+	    if (!this.state.beats[this.state.nextBeat + 1]) {
 	      clearInterval(this.intervalVar);
 	      return;
 	    }

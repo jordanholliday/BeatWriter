@@ -1,5 +1,6 @@
 var React = require('react'),
-    YoutubeUtil = require('../util/youtube_util');
+    YoutubeUtil = require('../util/youtube_util'),
+    Footer = require('./footer');
 
 var Instructions = React.createClass({
   contextTypes: {
@@ -47,6 +48,7 @@ var Instructions = React.createClass({
         <h2>
           Press <span className="key">SPACE</span> to continue.
         </h2>
+        <Footer />
       </div>
     )
   }

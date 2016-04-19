@@ -1,5 +1,6 @@
 var React = require('react'),
-    ApiUtil = require('../util/api_util');
+    ApiUtil = require('../util/api_util'),
+    Footer = require('./footer');
 
 var TrackList = React.createClass({
   contextTypes: {
@@ -82,6 +83,7 @@ var TrackList = React.createClass({
         <h2>
           Press <span className="key">↑</span>, <span className="key">↓</span>, or <span className="key">ENTER</span> to select.
         </h2>
+        <Footer />
       </div>
     )
   }

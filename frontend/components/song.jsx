@@ -178,7 +178,7 @@ var Song = React.createClass({
     var beatArr = [];
     for (var i = (nextBeat - 10 > 0 ? nextBeat - 10 : 0); i < this.state.beats.length && i < nextBeat + 10; i++) {
       // to display, beat must be within 1.7s of localTime AND at time after last video pause
-      if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.7 && this.state.beats[i].time > this.state.lastStop + 1.0) {
+      if (Math.abs(this.state.beats[i].time - this.state.localTime) < 1.3 && this.state.beats[i].time > this.state.lastStop + 1.0) {
         beatArr.push(this.renderOneBeat(i));
       }
     }

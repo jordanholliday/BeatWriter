@@ -39,6 +39,8 @@ var Song = React.createClass({
     e.preventDefault();
     if (e.which === 32) {
       this.togglePlay();
+    } else if (e.which === 37 && this.player.getPlayerState() !== 1) {
+      this.context.router.push('/track-list');
     } else if (this.state.beats) {
       this.scoreInput(e);
     }
@@ -122,7 +124,7 @@ var Song = React.createClass({
     }
 
     // otherwise update nextBeat
-    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.1) {
+    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.15) {
       var nextBeat = this.state.nextBeat + 1;
       this.setState({
         nextBeat: nextBeat
@@ -189,7 +191,7 @@ var Song = React.createClass({
   renderPauseMessage: function () {
     return (
       <li className="pause-msg">
-        <span className="key">Space</span> to start, <span className="key">Space</span> to stop
+        <span className="key">Space</span> to play or pause, <span className="key">←</span> to return to track list
       </li>
     );
   },

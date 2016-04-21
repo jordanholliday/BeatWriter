@@ -4,7 +4,7 @@
 ### About
 BeatWriter is a browser-based typing tutor. Users type to the beat of a song while the music video plays in the background, and earn points for accurate typing.
 
-Basically, it’s *DDR*-meets-*Mavis Beacon Teaches Typing*.
+Basically, it’s *Guitar Hero*-meets-*Mavis Beacon Teaches Typing*.
 
 ### Screenshots
 ##### Splash Page

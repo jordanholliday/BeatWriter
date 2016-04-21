@@ -64,6 +64,7 @@ textarea {
 body {
   font-family: sans-serif;
   line-height: 1.166667;
+  background: #000;
 }
 
 /* Important for placing YT iframe at back; also need wmode: "transparent" param on embed*/

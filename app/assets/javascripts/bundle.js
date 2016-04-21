@@ -20219,6 +20219,8 @@
 	    e.preventDefault();
 	    if (e.which === 32) {
 	      this.togglePlay();
+	    } else if (e.which === 37 && this.player.getPlayerState() !== 1) {
+	      this.context.router.push('/track-list');
 	    } else if (this.state.beats) {
 	      this.scoreInput(e);
 	    }
@@ -20306,7 +20308,7 @@
 	    }
 	
 	    // otherwise update nextBeat
-	    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.1) {
+	    if (this.state.beats[this.state.nextBeat + 1].time < this.state.localTime + 0.15) {
 	      var nextBeat = this.state.nextBeat + 1;
 	      this.setState({
 	        nextBeat: nextBeat
@@ -20381,13 +20383,13 @@
 	        { className: 'key' },
 	        'Space'
 	      ),
-	      ' to start, ',
+	      ' to play or pause, ',
 	      React.createElement(
 	        'span',
 	        { className: 'key' },
-	        'Space'
+	        '←'
 	      ),
-	      ' to stop'
+	      ' to return to track list'
 	    );
 	  },
 	
@@ -30554,7 +30556,7 @@
 	          React.createElement(
 	            'li',
 	            null,
-	            'Earn points by the typing the right letter.'
+	            'Earn points by the typing the correct letter.'
 	          ),
 	          React.createElement(
 	            'li',
@@ -30569,12 +30571,7 @@
 	          React.createElement(
 	            'li',
 	            null,
-	            'The letters move like Bono: with or without you, and roughly in time with the music.'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'It\'s pretty tough at first. Summer Song is a good warm up.'
+	            'It’s pretty tough at first. “Summer Song” and “Habits” are good warm ups.'
 	          )
 	        )
 	      ),
@@ -30615,29 +30612,19 @@
 	        React.createElement(
 	          "li",
 	          null,
-	          "( by Jordan Holliday "
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
+	          "( by Jordan Holliday • ",
 	          React.createElement(
 	            "a",
 	            { href: "http://github.com/jmhol9", target: "_blank" },
 	            "github"
-	          )
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
+	          ),
+	          " • ",
 	          React.createElement(
 	            "a",
 	            { href: "http://jordanholliday.com", target: "_blank" },
 	            "portfolio"
-	          )
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
+	          ),
+	          " • ",
 	          React.createElement(
 	            "a",
 	            { href: "mailto:jordanholliday@gmail.com", target: "_blank" },

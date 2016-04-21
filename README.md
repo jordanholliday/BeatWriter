@@ -20,6 +20,13 @@ In “composer” mode (currently available to admins only), you tap out a beat�
 
 You can then switch to “player” mode, and type along to the beat you composed.
 
+### Technologies Used
+* React.js
+* Ruby on Rails
+* YouTube iFrame API
+* Persisted data served via JSON API
+* PostgreSQL
+
 ### Technical Details
 BeatWriter is primarily React.js, plus a simple Ruby on Rails backend. Audio, video, song metadata, and beat timing come courtesy of the YouTube iFrame API.
 

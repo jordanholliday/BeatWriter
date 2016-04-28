@@ -1,22 +1,25 @@
 var React = require('react'),
-    ApiUtil = require('../util/api_util');
+    ApiUtil = require('../util/api_util'),
+    Footer = require('./footer');
 
 var Composer = React.createClass({
   getInitialState: function () {
     return {
       localTime: 0,
       ytTime: 0,
-      nextBeat: 0
+      nextBeat: 0,
+      password: null,
+      youtubeId: null
     }
   },
 
   componentDidMount: function () {
-    $(document.body).on('keydown', this.keyDownHandler);
+    // $(document.body).on('keydown', this.keyDownHandler);
     this.enableIframeApi();
   },
 
   componentWillUnmount: function () {
-    $(document.body).off('keydown', this.keyDownHandler);
+    // $(document.body).off('keydown', this.keyDownHandler);
   },
 
   keyDownHandler: function (e) {
@@ -74,9 +77,34 @@ var Composer = React.createClass({
     }
   },
 
+  updatePassword: function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.setState({password: e.currentTarget.value});
+  },
+
+  passwordCorrect: function () {
+    this.state.password === "gunforhire";
+  },
+
   render: function () {
     return (
       <container className="song-container" id="song-container"> </container>
+      <div className="splash-bg">
+        <h2 className="statics-title">
+          Composer
+        </h2>
+        <div className="statics-wrapper">
+          <label for="youtube-id">YouTube ID</label>
+          <input type="text" id="youtube-id" value={this.state.password}/>
+          <label for="password">Password</label>
+          <input type="password" id="password" onChange={this.updatePassword}/>
+        </div>
+        <h2>
+          Press <span className="key">ENTER</span> to submit
+        </h2>
+        <Footer />
+      </div>
     );
   }
 });
